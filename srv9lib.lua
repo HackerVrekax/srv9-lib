@@ -9176,9 +9176,15 @@ do
             table.insert(Pool, CreatePoolRow())
         end
 
-        table.insert(Dropdown.Connections, MenuTable.Menu:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
-            Dropdown:RefreshPool()
-        end))
+        local targetMenu = MenuTable and MenuTable.Menu
+        if targetMenu then
+            local signal = targetMenu:GetPropertyChangedSignal("CanvasPosition")
+            if signal then
+                table.insert(Dropdown.Connections, signal:Connect(function()
+                    Dropdown:RefreshPool()
+                end))
+            end
+        end
 
         local function ValueExists(Val)
             if IsSequentialArray(Dropdown.Values) then
